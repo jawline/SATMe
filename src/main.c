@@ -15,6 +15,9 @@ int main(int argc, char** argv) {
 	initialiseClause(c+1, clausePartial(v, false), clausePartial(v+1, false), clausePartial(v, true));
 	initialiseClause(c+2, clausePartial(v, false), clausePartial(v+1, false), clausePartial(v, true));
 
+	SAT s;
+	initialiseSat(&s, v, 5, c, 3);
+
 	printf("Variables: ");
 	for (unsigned int i = 0; i < 5; i++) {
 		printf("%s%s", (v+i)->name, i == 4 ? "\n":" ");	

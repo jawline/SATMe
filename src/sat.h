@@ -14,4 +14,6 @@ typedef struct {
 	unsigned int numClauses;
 } SAT;
 
+void initialiseSat(SAT* sat, Variable* variables, unsigned int numVariables, Clause* clauses, unsigned int numClauses);
+
 #endif //_SAT_STRUCTURE_DEF_H_
