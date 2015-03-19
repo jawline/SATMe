@@ -11,4 +11,6 @@ typedef struct Clause {
 	ClausePartial C;
 } Clause;
 
+Clause* allocateClauses(unsigned int num);
+
 #endif //_CLAUSE_DEF_H_

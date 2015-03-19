@@ -1,6 +1,7 @@
 #ifndef _CLAUSE_PARTIAL_DEF_H_
 #define _CLAUSE_PARTIAL_DEF_H_
 #include <stdbool.h>
+#include "variable.h"
 
 /**
  * Clause partials represent a single variable reference or ¬ within a predicate clause
