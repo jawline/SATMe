@@ -37,6 +37,46 @@ void warnUnusedVariables(SAT* sat) {
 	}
 }
 
-bool satIsSatisfiable(SAT* sat) {
+bool satRecursiveSatisfy(SAT* sat) {
 
+	//Find the next unset state
+	Variable* unset = 0;
+
+	for (unsigned int i = 0; i < sat->numVariables; i++) {
+		if ((sat->variables+i)->state == VAR_UNSET) {
+			unset = sat->variables+i;
+			break;
+		}
+	}
+
+	if (!unset) {
+		printf("TEST SATISFIABLE\n");
+		return false;
+	} else {
+		printf("Next unset %s\n", unset->name);
+	}
+
+	unset->state = VAR_TRUE;
+	if (satRecursiveSatisfy(sat)) {
+		return true;
+	}
+
+	unset->state = VAR_FALSE;
+	if (satRecursiveSatisfy(sat)) {
+		return true;
+	}
+
+	unset->state = VAR_UNSET;
+
+	return false;
+}
+
+bool satIsSatisfiable(SAT* sat) {
+	
+	//Reset all states to VAR_UNSET before attempting to satisfy recursively
+	for (unsigned int i = 0; i < sat->numVariables; i++) {
+		(sat->variables+i)->state = VAR_UNSET;
+	}
+
+	return satRecursiveSatisfy(sat);
 }

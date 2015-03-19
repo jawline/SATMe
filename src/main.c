@@ -19,6 +19,7 @@ int main(int argc, char** argv) {
 	initialiseSat(&s, v, 5, c, 3);
 	printSat(&s);
 	warnUnusedVariables(&s);
+	satIsSatisfiable(&s);
 
 	return 0;
 }
