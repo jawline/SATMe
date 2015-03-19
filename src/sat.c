@@ -17,7 +17,7 @@ void printSat(SAT* sat) {
 	printf("Clauses: ");
 	for (unsigned int i = 0; i < sat->numClauses; i++) {
 		printClause(sat->clauses+i);
-		printf(i == 2 ? "\n" : " ");
+		printf(i == (sat->numClauses-1) ? "\n" : "^");
 	}
 }
 
@@ -32,7 +32,7 @@ void warnUnusedVariables(SAT* sat) {
 	}
 	for (unsigned int i = 0; i < sat->numVariables; i++) {
 		if (!(sat->variables+i)->state) {
-			printf("Warning: Variable %s is unused\n", (sat->variables+i)->name);
+			printf("Warning: Variable %s is unused (This could slow down execution)\n", (sat->variables+i)->name);
 		}
 	}
 }
@@ -66,22 +66,24 @@ bool satRecursiveSatisfy(SAT* sat) {
 		}
 	}
 
+	//If all variables are allocated then check if the SAT is satisfied
 	if (!unset) {
 		return satSatisfied(sat);
-	} else {
-		printf("Next unset %s\n", unset->name);
 	}
 
+	//Recurse and test satisfiability with this variable set to true
 	unset->state = VAR_TRUE;
 	if (satRecursiveSatisfy(sat)) {
 		return true;
 	}
 
+	//Recurse and test satisfiability with this variable set to false
 	unset->state = VAR_FALSE;
 	if (satRecursiveSatisfy(sat)) {
 		return true;
 	}
 
+	//If no solution was found then cleanup the changes and backtrack
 	unset->state = VAR_UNSET;
 
 	return false;

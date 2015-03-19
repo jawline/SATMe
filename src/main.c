@@ -10,13 +10,12 @@ int main(int argc, char** argv) {
 	initialiseVariable(v+3, "D");
 	initialiseVariable(v+4, "E");
 
-	Clause* c = allocateClauses(3);
-	initialiseClause(c, clausePartial(v, false), clausePartial(v+1, false), clausePartial(v, true));
-	initialiseClause(c+1, clausePartial(v, false), clausePartial(v+3, true), clausePartial(v, true));
-	initialiseClause(c+2, clausePartial(v, false), clausePartial(v+1, false), clausePartial(v+4, true));
+	Clause* c = allocateClauses(2);
+	initialiseClause(c, clausePartial(v, false), clausePartial(v, false), clausePartial(v, false));
+	initialiseClause(c+1, clausePartial(v, true), clausePartial(v, true), clausePartial(v, true));
 
 	SAT s;
-	initialiseSat(&s, v, 5, c, 3);
+	initialiseSat(&s, v, 5, c, 2);
 	printSat(&s);
 	warnUnusedVariables(&s);
 
