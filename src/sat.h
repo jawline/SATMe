@@ -1,5 +1,6 @@
 #ifndef _SAT_STRUCTURE_DEF_H_
 #define _SAT_STRUCTURE_DEF_H_
+#include <stdbool.h>
 #include "variable.h"
 #include "clause.h"
 
@@ -28,5 +29,10 @@ void printSat(SAT* sat);
  * Prints a warning if a defined variable is not referenced in any clauses
  */
 void warnUnusedVariables(SAT* sat);
+
+/**
+ * Returns true if a SAT problem is satisfiable, and false otherwise
+ */
+bool satIsSatisfiable(SAT* sat);
 
 #endif //_SAT_STRUCTURE_DEF_H_

@@ -23,16 +23,20 @@ void printSat(SAT* sat) {
 
 void warnUnusedVariables(SAT* sat) {
 	for (unsigned int i = 0; i < sat->numVariables; i++) {
-		(sat->variables+i)->state = false;
+		(sat->variables+i)->state = VAR_FALSE;
 	}
 	for (unsigned int i = 0; i < sat->numClauses; i++) {
-		(sat->clauses+i)->A.variable->state = true;
-		(sat->clauses+i)->B.variable->state = true;
-		(sat->clauses+i)->C.variable->state = true;
+		(sat->clauses+i)->A.variable->state = VAR_TRUE;
+		(sat->clauses+i)->B.variable->state = VAR_TRUE;
+		(sat->clauses+i)->C.variable->state = VAR_TRUE;
 	}
 	for (unsigned int i = 0; i < sat->numVariables; i++) {
 		if (!(sat->variables+i)->state) {
 			printf("Warning: Variable %s is unused\n", (sat->variables+i)->name);
 		}
 	}
+}
+
+bool satIsSatisfiable(SAT* sat) {
+
 }

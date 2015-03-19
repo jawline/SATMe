@@ -1,10 +1,11 @@
 #ifndef _VARIABLE_DEF_H_
 #define _VARIABLE_DEF_H_
-#include <stdbool.h>
+
+typedef enum { VAR_FALSE = 0, VAR_TRUE, VAR_UNSET} VariableState;
 
 typedef struct {
 	char const* name;
-	bool state;
+	VariableState state;
 } Variable;
 
 /**

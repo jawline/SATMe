@@ -12,8 +12,8 @@ int main(int argc, char** argv) {
 
 	Clause* c = allocateClauses(3);
 	initialiseClause(c, clausePartial(v, false), clausePartial(v+1, false), clausePartial(v, true));
-	initialiseClause(c+1, clausePartial(v, false), clausePartial(v+1, false), clausePartial(v, true));
-	initialiseClause(c+2, clausePartial(v, false), clausePartial(v+1, false), clausePartial(v, true));
+	initialiseClause(c+1, clausePartial(v, false), clausePartial(v+3, true), clausePartial(v, true));
+	initialiseClause(c+2, clausePartial(v, false), clausePartial(v+1, false), clausePartial(v+4, true));
 
 	SAT s;
 	initialiseSat(&s, v, 5, c, 3);
