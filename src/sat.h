@@ -31,6 +31,11 @@ void printSat(SAT* sat);
 void warnUnusedVariables(SAT* sat);
 
 /**
+ * Prints the current variable allocation
+ */
+void printSatAllocation(SAT* sat);
+
+/**
  * Returns true if a SAT problem is satisfiable, and false otherwise
  */
 bool satIsSatisfiable(SAT* sat);

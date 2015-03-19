@@ -25,4 +25,9 @@ typedef struct {
  */
 ClausePartial clausePartial(Variable* v, bool negate);
 
+/**
+ * Returns true if a clause partial is satisfied
+ */
+bool clausePartialSatisfied(ClausePartial* p);
+
 #endif //_CLAUSE_PARTIAL_DEF_H_

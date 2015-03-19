@@ -21,3 +21,7 @@ void printClause(Clause* clause) {
 		clause->B.negate ? "¬" : "", clause->B.variable->name,
 		clause->C.negate ? "¬" : "", clause->C.variable->name);
 }
+
+bool clauseSatisfied(Clause* clause) {
+	return clausePartialSatisfied(&clause->A) || clausePartialSatisfied(&clause->B) || clausePartialSatisfied(&clause->C);
+}

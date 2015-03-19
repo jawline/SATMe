@@ -1,5 +1,6 @@
 #ifndef _CLAUSE_DEF_H_
 #define _CLAUSE_DEF_H_
+#include <stdbool.h>
 #include "clause_partial.h"
 
 /**
@@ -25,5 +26,10 @@ void initialiseClause(Clause* clause, ClausePartial A, ClausePartial B, ClausePa
  * Print debug info about the clause
  */
 void printClause(Clause* clause);
+
+/**
+ * Returns true if the clause is satisfied
+ */
+bool clauseSatisfied(Clause* clause);
 
 #endif //_CLAUSE_DEF_H_
