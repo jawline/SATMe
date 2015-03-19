@@ -12,7 +12,7 @@ INSTALL_LIB_PATH = /usr/lib/
 
 #Compiler settings
 CC=gcc
-CFLAGS=-c -Wall -ggdb
+CFLAGS=-c -Wall -ggdb -std=c11
 LDFLAGS=-ggdb
 
 #Rules to find source code

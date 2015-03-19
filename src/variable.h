@@ -7,4 +7,7 @@ typedef struct {
 	bool state;
 } Variable;
 
+Variable* allocateVariables(unsigned int num);
+void initialiseVariable(Variable* variable, char const* name);
+
 #endif //_VARIABLE_DEF_H_
