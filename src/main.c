@@ -3,15 +3,27 @@
 
 int main(int argc, char** argv) {
 	Variable* v = allocateVariables(5);
+
 	initialiseVariable(v, "A");
 	initialiseVariable(v+1, "B");
 	initialiseVariable(v+2, "C");
 	initialiseVariable(v+3, "D");
 	initialiseVariable(v+4, "E");
 
+	Clause* c = allocateClauses(3);
+	initialiseClause(c, clausePartial(v, false), clausePartial(v+1, false), clausePartial(v, true));
+	initialiseClause(c+1, clausePartial(v, false), clausePartial(v+1, false), clausePartial(v, true));
+	initialiseClause(c+2, clausePartial(v, false), clausePartial(v+1, false), clausePartial(v, true));
+
+	printf("Variables: ");
 	for (unsigned int i = 0; i < 5; i++) {
 		printf("%s%s", (v+i)->name, i == 4 ? "\n":" ");	
 	}
+
+	for (unsigned int i = 0; i < 3; i++) {
+		printClause(c+i);
+		printf(i == 2 ? "\n" : " ");
+	}
 	
-	return 1;
+	return 0;
 }

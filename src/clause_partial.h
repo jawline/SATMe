@@ -20,4 +20,6 @@ typedef struct {
 
 } ClausePartial;
 
+ClausePartial clausePartial(Variable* v, bool negate);
+
 #endif //_CLAUSE_PARTIAL_DEF_H_

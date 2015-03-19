@@ -12,5 +12,7 @@ typedef struct Clause {
 } Clause;
 
 Clause* allocateClauses(unsigned int num);
+void initialiseClause(Clause* clause, ClausePartial A, ClausePartial B, ClausePartial C);
+void printClause(Clause* clause);
 
 #endif //_CLAUSE_DEF_H_
