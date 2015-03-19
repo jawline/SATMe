@@ -11,8 +11,19 @@ typedef struct Clause {
 	ClausePartial C;
 } Clause;
 
+/**
+ * Allocate memory for num clauses
+ */
 Clause* allocateClauses(unsigned int num);
+
+/**
+ * Initialise a given clause with some values
+ */
 void initialiseClause(Clause* clause, ClausePartial A, ClausePartial B, ClausePartial C);
+
+/**
+ * Print debug info about the clause
+ */
 void printClause(Clause* clause);
 
 #endif //_CLAUSE_DEF_H_

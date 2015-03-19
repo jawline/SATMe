@@ -17,16 +17,8 @@ int main(int argc, char** argv) {
 
 	SAT s;
 	initialiseSat(&s, v, 5, c, 3);
+	printSat(&s);
+	warnUnusedVariables(&s);
 
-	printf("Variables: ");
-	for (unsigned int i = 0; i < 5; i++) {
-		printf("%s%s", (v+i)->name, i == 4 ? "\n":" ");	
-	}
-
-	for (unsigned int i = 0; i < 3; i++) {
-		printClause(c+i);
-		printf(i == 2 ? "\n" : " ");
-	}
-	
 	return 0;
 }

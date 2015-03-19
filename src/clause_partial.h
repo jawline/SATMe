@@ -20,6 +20,9 @@ typedef struct {
 
 } ClausePartial;
 
+/**
+ * Create a clausePartial with the specified values
+ */
 ClausePartial clausePartial(Variable* v, bool negate);
 
 #endif //_CLAUSE_PARTIAL_DEF_H_

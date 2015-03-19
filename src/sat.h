@@ -14,6 +14,19 @@ typedef struct {
 	unsigned int numClauses;
 } SAT;
 
+/**
+ * Initialise a SAT instance with the given values
+ */
 void initialiseSat(SAT* sat, Variable* variables, unsigned int numVariables, Clause* clauses, unsigned int numClauses);
+
+/**
+ * Print the SAT structure
+ */
+void printSat(SAT* sat);
+
+/**
+ * Prints a warning if a defined variable is not referenced in any clauses
+ */
+void warnUnusedVariables(SAT* sat);
 
 #endif //_SAT_STRUCTURE_DEF_H_
