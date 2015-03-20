@@ -51,6 +51,11 @@ Variable* satFindVariable(SAT* sat, char const* name);
 Variable* satAddVariable(SAT* sat, char const* name);
 
 /**
+ * Adds a new clause to the SAT
+ */
+void satAddClause(SAT* sat, ClausePartial a, ClausePartial b, ClausePartial c);
+
+/**
  * Returns true if a SAT problem is satisfiable, and false otherwise
  */
 bool satIsSatisfiable(SAT* sat);

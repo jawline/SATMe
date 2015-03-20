@@ -26,23 +26,65 @@ void freeSat(SAT* sat) {
 	}
 }
 
+void resolveClauseChange(Clause* clause, Variable* old, Variable* newVariable) {
+	printf("Joined\n");
+	
+	printf("Aaah\n");
+	printf("Aaah\n");
+	printf("Laucnhing for %s\n", clause->A.variable->name);
+
+	printf("Aaah\n");
+	Variable* iter = old;
+	while (iter != clause->A.variable) {
+		printf("Looking: %s\n", iter->name);
+		iter++;
+	}
+	printf("Boo\n");
+	clause->A.variable = newVariable + (iter-old);
+	printf("Resolved %s\n", clause->A.variable->name);
+	for (;;) {}
+}
+
 Variable* satAddVariable(SAT* sat, char const* name) {
   unsigned int numCurrent = sat->numVariables;
 
-  Variable* newAllocation = (Variable*) malloc(sizeof(Variable) * (numCurrent + 1));
-  memset(newAllocation, 0, sizeof(Variable) * (numCurrent + 1));
+  Variable* newAllocation = malloc(sizeof(Variable) * (numCurrent + 1));
 
-  if (sat->numVariables) {
+  if (numCurrent) {
   	memcpy(newAllocation, sat->variables, sizeof(Variable) * sat->numVariables);
   }
 
   initialiseVariable(newAllocation + numCurrent, name);
   Variable* createdVariable = newAllocation + numCurrent;
 
+  printf("Added\n");
+
+  //Point old clause references to new
+  for (unsigned int i = 0; i < sat->numClauses; i++) {
+  	printf("You what mate\n");
+  	resolveClauseChange(sat->clauses + i, sat->variables, newAllocation);
+  }
+
+  free(sat->variables);
   sat->variables = newAllocation;
   sat->numVariables++;
   
   return createdVariable;
+}
+
+void satAddClause(SAT* sat, ClausePartial a, ClausePartial b, ClausePartial c) {
+	unsigned int numCurrent = sat->numClauses;
+	Clause* newAllocation = malloc(sizeof(Clause) * (numCurrent+1));
+
+	if (numCurrent) {
+		memcpy(newAllocation, sat->clauses, sizeof(Clause) * numCurrent);
+	}
+
+	initialiseClause(newAllocation+numCurrent, a, b, c);
+
+	free(sat->clauses);
+	sat->clauses = newAllocation;
+	sat->numClauses++;
 }
 
 Variable* satFindVariable(SAT* sat, char const* name) {
@@ -57,13 +99,16 @@ Variable* satFindVariable(SAT* sat, char const* name) {
 void printSat(SAT* sat) {
 	printf("Variables: ");
 	for (unsigned int i = 0; i < sat->numVariables; i++) {
-		printf("%s%s", (sat->variables+i)->name, i == 4 ? "\n":" ");	
+		printf("%s%s", (sat->variables+i)->name, i == (sat->numVariables - 1) ? "" : " ");	
 	}
+	printf("\n");
+
 	printf("Clauses: ");
 	for (unsigned int i = 0; i < sat->numClauses; i++) {
 		printClause(sat->clauses+i);
-		printf(i == (sat->numClauses-1) ? "\n" : "^");
+		printf(i == (sat->numClauses-1) ? "" : "^");
 	}
+	printf("\n");
 }
 
 void warnUnusedVariables(SAT* sat) {

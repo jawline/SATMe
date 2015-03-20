@@ -47,9 +47,12 @@ char const* parseVariable(SAT* sat, ClausePartial* partial, char const* satStrin
   buf[1] = '\0';
 
   //Set the clause partial from the parsed information
-  Variable* v = satAddVariable(sat, buf);
-  *partial = clausePartial(v, negate);
+  Variable* v = satFindVariable(sat, buf);
+  if (!v) {
+    v = satAddVariable(sat, buf);
+  }
 
+  *partial = clausePartial(v, negate);
   return satString;
 }
 
@@ -58,10 +61,10 @@ char const* parseVariable(SAT* sat, ClausePartial* partial, char const* satStrin
  */
 char const* parseClauseBody(SAT* sat, char const* satString) {
 
-  ClausePartial A, B, C;
+  ClausePartial a, b, c;
   
   //Parse the first variable in clause
-  satString = parseVariable(sat, &A, satString);
+  satString = parseVariable(sat, &a, satString);
   if (!satString) {
     return 0;
   }
@@ -74,7 +77,7 @@ char const* parseClauseBody(SAT* sat, char const* satString) {
   }
   
   //Parse the second variable in clause
-  satString = parseVariable(sat, &B, satString);
+  satString = parseVariable(sat, &b, satString);
   if (!satString) {
     return 0;
   }
@@ -87,10 +90,12 @@ char const* parseClauseBody(SAT* sat, char const* satString) {
   }
   
   //Parse the last variable in clause
-  satString = parseVariable(sat, &C, satString);
+  satString = parseVariable(sat, &c, satString);
   if (!satString) {
     return 0;
   }
+
+  satAddClause(sat, a, b, c);
   
   return satString;
 }
