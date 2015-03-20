@@ -1,11 +1,6 @@
 #include "parser.h"
 #include <ctype.h>
 
-char const* nextToken(char const* satString) {
-  for (; *satString && isspace(*satString); satString++) {}
-  return satString;
-}
-
 /**
  * Grammar explanation
  * | - Or
@@ -13,6 +8,14 @@ char const* nextToken(char const* satString) {
  * `x` - Expect x character
  * Hello: `a` - Define the grammar rule Hello which is satisfied by the input string `a`
  */
+
+/**
+ * Skip whitespace until the end of the input or the next character is found
+ */
+char const* nextToken(char const* satString) {
+  for (; *satString && isspace(*satString); satString++) {}
+  return satString;
+}
 
 /**
  * Alpha: Any alphabet character
