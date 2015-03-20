@@ -6,24 +6,36 @@ char const* nextToken(char const* satString) {
   return satString;
 }
 
+/**
+ * Alpha: Any alphabet character
+ * Variable: Alpha | '¬' Alpha
+ */
 char const* parseVariable(SAT* sat, char const* satString) {
   bool negate = false;
+  char name = '\0';
+  
+  //If the first character is a negation then we expect the ¬A 
   if (*satString == '¬') {
     negate = true;
     satString = nextToken(satString+1);
   }
   
   if (isalpha(*satString)) {
+    name = *satString;
     satString = nextToken(satString+1);
   } else {
     printf("Expected alphabet variable name. Recieved %c\n", *satString);
     return 0;
   }
   
+  printf("Parsed Variable %s%c", negate?"¬":"", name);
   return satString;
 }
 
-char const* parseClause(SAT* sat, char const* satString) {
+/**
+ * ClauseBody: Variable 'v' Variable 'v' Variable
+ */
+char const* parseClauseBody(SAT* sat, char const* satString) {
   
   //Parse the first variable in clause
   satString = parseVariable(satString);
@@ -60,13 +72,16 @@ char const* parseClause(SAT* sat, char const* satString) {
   return satString;
 }
 
+/**
+ * Clause: '(' ClauseBody ')' ['^' Clause]
+ */
 char const* parseCnfClause(SAT* sat, char const* satString) {
 
   //Parse a clause
   if (*satString == '(') {
 
     //Parse the variables
-    satString = parseClause(sat, nextToken(satString+1));
+    satString = parseClauseBody(sat, nextToken(satString+1));
     if (!satString) {
       return 0;
     }
