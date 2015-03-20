@@ -1,6 +1,7 @@
 #include "sat.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 void initialiseSat(SAT* sat, Variable* variables, unsigned int numVariables, Clause* clauses, unsigned int numClauses) {
 	sat->variables = variables;
@@ -11,6 +12,9 @@ void initialiseSat(SAT* sat, Variable* variables, unsigned int numVariables, Cla
 
 void freeSat(SAT* sat) {
 	if (sat->variables) {
+		for (unsigned int i = 0; i < sat->numVariables; i++) {
+			freeVariable(sat->variables+i);
+		}
 		free(sat->variables);
 		sat->variables = 0;
 		sat->numVariables = 0;
@@ -20,6 +24,34 @@ void freeSat(SAT* sat) {
 		sat->clauses = 0;
 		sat->numClauses = 0;
 	}
+}
+
+Variable* satAddVariable(SAT* sat, char const* name) {
+  unsigned int numCurrent = sat->numVariables;
+
+  Variable* newAllocation = (Variable*) malloc(sizeof(Variable) * (numCurrent + 1));
+  memset(newAllocation, 0, sizeof(Variable) * (numCurrent + 1));
+
+  if (sat->numVariables) {
+  	memcpy(newAllocation, sat->variables, sizeof(Variable) * sat->numVariables);
+  }
+
+  initialiseVariable(newAllocation + numCurrent, name);
+  Variable* createdVariable = newAllocation + numCurrent;
+
+  sat->variables = newAllocation;
+  sat->numVariables++;
+  
+  return createdVariable;
+}
+
+Variable* satFindVariable(SAT* sat, char const* name) {
+  for (unsigned int i = 0; i < sat->numVariables; i++) {
+    if (strcmp((sat->variables+i)->name, name) == 0) {
+      return sat->variables+i;
+    }
+  }
+  return 0;
 }
 
 void printSat(SAT* sat) {

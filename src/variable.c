@@ -9,5 +9,10 @@ Variable* allocateVariables(unsigned int num) {
 }
 
 void initialiseVariable(Variable* variable, char const* name) {
-	variable->name = name;
+	variable->name = malloc(strlen(name)+1);
+	strcpy(variable->name, name);
+}
+
+void freeVariable(Variable* variable) {
+	free(variable->name);
 }

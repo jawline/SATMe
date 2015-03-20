@@ -16,7 +16,7 @@ typedef enum {
  * A Variable in the SAT solver has a name (for debugging and output) and a current allocation state
  */
 typedef struct {
-	char const* name;
+	char* name;
 	VariableState state;
 } Variable;
 
@@ -29,5 +29,10 @@ Variable* allocateVariables(unsigned int num);
  * Initialise the specified variable with a given name
  */
 void initialiseVariable(Variable* variable, char const* name);
+
+/**
+ * Free any memory allocated to a variable
+ */
+void freeVariable(Variable* variable);
 
 #endif //_VARIABLE_DEF_H_

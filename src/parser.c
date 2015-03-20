@@ -42,7 +42,14 @@ char const* parseVariable(SAT* sat, ClausePartial* partial, char const* satStrin
     return 0;
   }
   
-  printf("Parsed Variable %s%c\n", negate?"¬":"", name);
+  char buf[2];
+  buf[0] = name;
+  buf[1] = '\0';
+
+  //Set the clause partial from the parsed information
+  Variable* v = satAddVariable(sat, buf);
+  *partial = clausePartial(v, negate);
+
   return satString;
 }
 

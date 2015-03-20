@@ -41,6 +41,16 @@ void warnUnusedVariables(SAT* sat);
 void printSatAllocation(SAT* sat);
 
 /**
+ * Finds a variable in a SAT, return 0 if it doesnt exist
+ */
+Variable* satFindVariable(SAT* sat, char const* name);
+
+/**
+ * Add a variable to a SAT
+ */
+Variable* satAddVariable(SAT* sat, char const* name);
+
+/**
  * Returns true if a SAT problem is satisfiable, and false otherwise
  */
 bool satIsSatisfiable(SAT* sat);

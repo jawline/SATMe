@@ -18,20 +18,8 @@ int main(int argc, char** argv) {
 	Variable* v = 0;
 	Clause* c = 0;
 
+	initialiseSat(&s, 0, 0, 0, 0);
 	parseSat(&s, "(Av¬BvC) ^ (¬AvBv¬C) ^ (AvCvD)");
-	
-	v = allocateVariables(5);
-	initialiseVariable(v, "A");
-	initialiseVariable(v+1, "B");
-	initialiseVariable(v+2, "C");
-	initialiseVariable(v+3, "D");
-	initialiseVariable(v+4, "E");
-
-	c = allocateClauses(2);
-	initialiseClause(c, clausePartial(v, false), clausePartial(v, false), clausePartial(v, false));
-	initialiseClause(c+1, clausePartial(v, true), clausePartial(v, true), clausePartial(v, true));
-
-	initialiseSat(&s, v, 5, c, 2);
 	executeSat(&s);
 	freeSat(&s);
 
