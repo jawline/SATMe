@@ -21,6 +21,11 @@ typedef struct {
 void initialiseSat(SAT* sat, Variable* variables, unsigned int numVariables, Clause* clauses, unsigned int numClauses);
 
 /**
+ * Frees all memory attached to a SAT instance
+ */
+void freeSat(SAT* sat);
+
+/**
  * Print the SAT structure
  */
 void printSat(SAT* sat);
