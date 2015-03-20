@@ -6,11 +6,16 @@ char const* skipWhitespace(char const* satString) {
   return satString;
 }
 
-char const* nextTerminal(char const* satString) {
-  return skipWhitespace(satString+1);
+char const* parseClause(SAT* sat, char const* satString) {
+  
 }
 
 bool parseSat(SAT* sat, char const* satString) {
-  for (satString = skipWhitespace(satString); *satString; satString = nextTerminal(satString)) {
+  satString = skipWhitespace(satString);
+  if (*satString == '(') {
+    parseClause(sat, satString+1);
+    if (*satString != ')')
+  } else {
+      //ERROR
   }
 }
