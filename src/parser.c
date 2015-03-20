@@ -23,7 +23,7 @@ char const* nextToken(char const* satString) {
  * Alpha: Any alphabet character
  * Variable: Alpha | '¬' Alpha
  */
-char const* parseVariable(SAT* sat, char const* satString) {
+char const* parseVariable(SAT* sat, ClausePartial* partial, char const* satString) {
   bool negate = false;
   char name = '\0';
 
@@ -50,9 +50,11 @@ char const* parseVariable(SAT* sat, char const* satString) {
  * ClauseBody: Variable 'v' Variable 'v' Variable
  */
 char const* parseClauseBody(SAT* sat, char const* satString) {
+
+  ClausePartial A, B, C;
   
   //Parse the first variable in clause
-  satString = parseVariable(sat, satString);
+  satString = parseVariable(sat, &A, satString);
   if (!satString) {
     return 0;
   }
@@ -65,7 +67,7 @@ char const* parseClauseBody(SAT* sat, char const* satString) {
   }
   
   //Parse the second variable in clause
-  satString = parseVariable(sat, satString);
+  satString = parseVariable(sat, &B, satString);
   if (!satString) {
     return 0;
   }
@@ -78,7 +80,7 @@ char const* parseClauseBody(SAT* sat, char const* satString) {
   }
   
   //Parse the last variable in clause
-  satString = parseVariable(sat, satString);
+  satString = parseVariable(sat, &C, satString);
   if (!satString) {
     return 0;
   }
@@ -99,7 +101,6 @@ char const* parseCnfClause(SAT* sat, char const* satString) {
     if (!satString) {
       return 0;
     }
-    
     //Check that it is closed
     if (*satString == ')') {
       satString = nextToken(satString+1);
@@ -107,9 +108,7 @@ char const* parseCnfClause(SAT* sat, char const* satString) {
       printf("ERROR: Expecting )\n");
       return 0;
     }
-
     printf("Finished parsing clause\n");
-
   } else {
     printf("ERROR: Expecting (\n");
     return 0;
