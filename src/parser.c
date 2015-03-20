@@ -7,6 +7,14 @@ char const* nextToken(char const* satString) {
 }
 
 /**
+ * Grammar explanation
+ * | - Or
+ * [Rule] - Optional rule
+ * `x` - Expect x character
+ * Hello: `a` - Define the grammar rule Hello which is satisfied by the input string `a`
+ */
+
+/**
  * Alpha: Any alphabet character
  * Variable: Alpha | '¬' Alpha
  */
