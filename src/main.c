@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include "sat.h"
 
-void executeSat(SAT* sat) {
-	printSat(&s);
-	warnUnusedVariables(&s);
-	bool isSatisfiable = satIsSatisfiable(&s);
+void executeSat(SAT* s) {
+	printSat(s);
+	warnUnusedVariables(s);
+	bool isSatisfiable = satIsSatisfiable(s);
 	printf("Satisfiable: %s\n", isSatisfiable ? "true" : "false");
 	if (isSatisfiable) {
-		printSatAllocation(&s);
+		printSatAllocation(s);
 	}	
 }
 

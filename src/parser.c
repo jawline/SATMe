@@ -1,5 +1,7 @@
 #include "parser.h"
 #include <ctype.h>
+#include <stdio.h>
+#include <string.h>
 
 /**
  * Grammar explanation
@@ -26,7 +28,7 @@ char const* parseVariable(SAT* sat, char const* satString) {
   char name = '\0';
   
   //If the first character is a negation then we expect the ¬A 
-  if (*satString == '¬') {
+  if (strcmp(satString, "¬")) {
     negate = true;
     satString = nextToken(satString+1);
   }
@@ -49,7 +51,7 @@ char const* parseVariable(SAT* sat, char const* satString) {
 char const* parseClauseBody(SAT* sat, char const* satString) {
   
   //Parse the first variable in clause
-  satString = parseVariable(satString);
+  satString = parseVariable(sat, satString);
   if (!satString) {
     return 0;
   }
@@ -62,7 +64,7 @@ char const* parseClauseBody(SAT* sat, char const* satString) {
   }
   
   //Parse the second variable in clause
-  satString = parseVariable(satString);
+  satString = parseVariable(sat, satString);
   if (!satString) {
     return 0;
   }
@@ -75,7 +77,7 @@ char const* parseClauseBody(SAT* sat, char const* satString) {
   }
   
   //Parse the last variable in clause
-  satString = parseVariable(satString);
+  satString = parseVariable(sat, satString);
   if (!satString) {
     return 0;
   }
