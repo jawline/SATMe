@@ -8,6 +8,19 @@ void initialiseSat(SAT* sat, Variable* variables, unsigned int numVariables, Cla
 	sat->numClauses = numClauses;
 }
 
+void freeSat(SAT* sat) {
+	if (sat->variables) {
+		free(sat->variables);
+		sat->variables = 0;
+		sat->numVariables = 0;
+	}
+	if (sat->clauses) {
+		free(sat->clauses);
+		sat->clauses = 0;
+		sat->numClauses = 0;
+	}
+}
+
 void printSat(SAT* sat) {
 	printf("Variables: ");
 	for (unsigned int i = 0; i < sat->numVariables; i++) {
