@@ -7,7 +7,20 @@ char const* nextToken(char const* satString) {
 }
 
 char const* parseVariable(SAT* sat, char const* satString) {
+  bool negate = false;
+  if (*satString == '¬') {
+    negate = true;
+    satString = nextToken(satString+1);
+  }
   
+  if (isalpha(*satString)) {
+    satString = nextToken(satString+1);
+  } else {
+    printf("Expected alphabet variable name. Recieved %c\n", *satString);
+    return 0;
+  }
+  
+  return satString;
 }
 
 char const* parseClause(SAT* sat, char const* satString) {
