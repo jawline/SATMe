@@ -1,9 +1,18 @@
 #include <stdio.h>
 #include "sat.h"
 
+void executeSat(SAT* sat) {
+	printSat(&s);
+	warnUnusedVariables(&s);
+	bool isSatisfiable = satIsSatisfiable(&s);
+	printf("Satisfiable: %s\n", isSatisfiable ? "true" : "false");
+	if (isSatisfiable) {
+		printSatAllocation(&s);
+	}	
+}
+
 int main(int argc, char** argv) {
 	Variable* v = allocateVariables(5);
-
 	initialiseVariable(v, "A");
 	initialiseVariable(v+1, "B");
 	initialiseVariable(v+2, "C");
@@ -16,14 +25,7 @@ int main(int argc, char** argv) {
 
 	SAT s;
 	initialiseSat(&s, v, 5, c, 2);
-	printSat(&s);
-	warnUnusedVariables(&s);
-
-	bool isSatisfiable = satIsSatisfiable(&s);
-	printf("Satisfiable: %s\n", isSatisfiable ? "true" : "false");
-	if (isSatisfiable) {
-		printSatAllocation(&s);
-	}
+	executeSat(&s);
 
 	return 0;
 }
