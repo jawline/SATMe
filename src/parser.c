@@ -26,11 +26,11 @@ char const* nextToken(char const* satString) {
 char const* parseVariable(SAT* sat, char const* satString) {
   bool negate = false;
   char name = '\0';
-  
+
   //If the first character is a negation then we expect the ¬A 
-  if (strcmp(satString, "¬")) {
+  if (*satString == -62 && *(satString+1) == -84) {
     negate = true;
-    satString = nextToken(satString+1);
+    satString = nextToken(satString+2);
   }
   
   if (isalpha(*satString)) {
@@ -41,7 +41,7 @@ char const* parseVariable(SAT* sat, char const* satString) {
     return 0;
   }
   
-  printf("Parsed Variable %s%c", negate?"¬":"", name);
+  printf("Parsed Variable %s%c\n", negate?"¬":"", name);
   return satString;
 }
 

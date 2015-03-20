@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "parser.h"
 #include "sat.h"
 
 void executeSat(SAT* s) {
@@ -16,6 +17,8 @@ int main(int argc, char** argv) {
 	SAT s;
 	Variable* v = 0;
 	Clause* c = 0;
+
+	parseSat(&s, "(Av¬BvC)");
 	
 	v = allocateVariables(5);
 	initialiseVariable(v, "A");
