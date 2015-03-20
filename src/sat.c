@@ -13,7 +13,6 @@ void printSat(SAT* sat) {
 	for (unsigned int i = 0; i < sat->numVariables; i++) {
 		printf("%s%s", (sat->variables+i)->name, i == 4 ? "\n":" ");	
 	}
-
 	printf("Clauses: ");
 	for (unsigned int i = 0; i < sat->numClauses; i++) {
 		printClause(sat->clauses+i);
@@ -58,7 +57,6 @@ bool satRecursiveSatisfy(SAT* sat) {
 
 	//Find the next unset state
 	Variable* unset = 0;
-
 	for (unsigned int i = 0; i < sat->numVariables; i++) {
 		if ((sat->variables+i)->state == VAR_UNSET) {
 			unset = sat->variables+i;
