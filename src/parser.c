@@ -28,7 +28,8 @@ char const* parseVariable(SAT* sat, char const* satString) {
   char name = '\0';
 
   //If the first character is a negation then we expect the ¬A 
-  if (*satString == -62 && *(satString+1) == -84) {
+  //Test -62 and -84 as ¬ is a multibyte character comprised of -62 and -84
+  if (*satString && *satString == -62 && *(satString+1) == -84) {
     negate = true;
     satString = nextToken(satString+2);
   }

@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
 	Variable* v = 0;
 	Clause* c = 0;
 
-	parseSat(&s, "(Av¬BvC)");
+	parseSat(&s, "(Av¬BvC) ^ (¬AvBv¬C) ^ (AvCvD)");
 	
 	v = allocateVariables(5);
 	initialiseVariable(v, "A");
