@@ -1,1 +1,4 @@
 SAT Solving experiment
+
+The aim of the experiment is to build a program in C which can takea 3-sat problem in CNF
+and calculate (slowly...) whether that problem is satisfiable
