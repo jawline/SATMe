@@ -13,9 +13,18 @@ char const* parseClause(SAT* sat, char const* satString) {
 bool parseSat(SAT* sat, char const* satString) {
   satString = skipWhitespace(satString);
   if (*satString == '(') {
-    parseClause(sat, satString+1);
-    if (*satString != ')')
+    satString = parseClause(sat, satString+1);
+    if (!satString) {
+      return false;
+    }
+    if (*satString == ')') {
+      satString++;
+    } else {
+      printf("ERROR: Expecting )\n");
+      return false;
+    }
   } else {
-      //ERROR
+    printf("ERROR: Expecting (\n");
+    return false;
   }
 }
