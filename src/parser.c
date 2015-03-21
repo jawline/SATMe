@@ -67,7 +67,7 @@ bool parseVariableExpected(char const* input) {
 }
 
 /**
- * ClauseBody: Variable 'v' Variable 'v' Variable
+ * ClauseBody: Variable ['v' Variable ['v' Variable]]
  */
 char const* parseClauseBody(SAT* sat, char const* input) {
 
@@ -117,7 +117,7 @@ char const* parseClauseBody(SAT* sat, char const* input) {
 }
 
 /**
- * Clause: '(' ClauseBody ')' ['^' Clause]
+ * Clause: ('(' ClauseBody ')' | Variable) ['^' Clause]
  */
 char const* parseCnfClause(SAT* sat, char const* input) {
 
