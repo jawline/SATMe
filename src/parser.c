@@ -69,7 +69,10 @@ char const* parseClauseBody(SAT* sat, char const* satString) {
     return 0;
   }
 
-  if (*satString == 'v') {
+  if (*satString == ')') {
+    satAddClause(sat, a, a, a);
+    return satString;
+  } else if (*satString == 'v') {
     satString = nextToken(satString+1);
   } else {
     printf("Unexpected %c\n", *satString);
@@ -82,7 +85,10 @@ char const* parseClauseBody(SAT* sat, char const* satString) {
     return 0;
   }
 
-  if (*satString == 'v') {
+  if (*satString == ')') {
+    satAddClause(sat, a, a, b);
+    return satString;
+  } else if (*satString == 'v') {
     satString = nextToken(satString+1);
   } else {
     printf("Unexpected %c\n", *satString);
