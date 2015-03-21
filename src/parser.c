@@ -14,53 +14,53 @@
 /**
  * Skip whitespace until the end of the input or the next character is found
  */
-char const* nextToken(char const* satString) {
-  for (; *satString && isspace(*satString); satString++) {}
-  return satString;
+char const* nextToken(char const* input) {
+  for (; *input && isspace(*input); input++) {}
+  return input;
 }
 
 /**
  * Alpha: Any alphabet character
  * Variable: Alpha | '¬' Alpha
  */
-char const* parseVariable(SAT* sat, ClausePartial* partial, char const* satString) {
+char const* parseVariable(SAT* sat, ClausePartial* partial, char const* input) {
   bool negate = false;
   char name = '\0';
 
   //If the first character is a negation then we expect the ¬A 
   //Test -62 and -84 as ¬ is a multibyte character comprised of -62 and -84
-  if (*satString && *satString == -62 && *(satString+1) == -84) {
+  if (*input && *input == -62 && *(input+1) == -84) {
     negate = true;
-    satString = nextToken(satString+2);
+    input = nextToken(input+2);
   }
   
-  if (isalpha(*satString)) {
-    name = *satString;
-    satString = nextToken(satString+1);
+  if (isalpha(*input)) {
+    name = *input;
+    input = nextToken(input+1);
   } else {
-    printf("Expected alphabet variable name. Recieved %c\n", *satString);
+    printf("Expected alphabet variable name. Recieved %c\n", *input);
     return 0;
   }
   
-  char buf[2];
-  buf[0] = name;
-  buf[1] = '\0';
+  char nameBuffer[2];
+  nameBuffer[0] = name;
+  nameBuffer[1] = '\0';
 
   //Set the clause partial from the parsed information
-  Variable* v = satFindVariable(sat, buf);
+  Variable* v = satFindVariable(sat, nameBuffer);
   if (!v) {
-    v = satAddVariable(sat, buf);
+    v = satAddVariable(sat, nameBuffer);
   }
 
   *partial = clausePartial(v, negate);
-  return satString;
+  return input;
 }
 
-bool parseVariableExpected(char const* satString) {
-  if (isalpha(*satString)) {
+bool parseVariableExpected(char const* input) {
+  if (isalpha(*input)) {
     return true;
   }
-  if (*satString && *satString == -62 && *(satString+1) == -84) {
+  if (*input && *input == -62 && *(input+1) == -84) {
     return true;
   }
   return false;
@@ -69,78 +69,78 @@ bool parseVariableExpected(char const* satString) {
 /**
  * ClauseBody: Variable 'v' Variable 'v' Variable
  */
-char const* parseClauseBody(SAT* sat, char const* satString) {
+char const* parseClauseBody(SAT* sat, char const* input) {
 
   ClausePartial a, b, c;
   
   //Parse the first variable in clause
-  satString = parseVariable(sat, &a, satString);
-  if (!satString) {
+  input = parseVariable(sat, &a, input);
+  if (!input) {
     return 0;
   }
 
-  if (*satString == ')') {
+  if (*input == ')') {
     satAddClause(sat, a, a, a);
-    return satString;
-  } else if (*satString == 'v') {
-    satString = nextToken(satString+1);
+    return input;
+  } else if (*input == 'v') {
+    input = nextToken(input+1);
   } else {
-    printf("Unexpected %c\n", *satString);
+    printf("Unexpected %c\n", *input);
     return 0;
   }
   
   //Parse the second variable in clause
-  satString = parseVariable(sat, &b, satString);
-  if (!satString) {
+  input = parseVariable(sat, &b, input);
+  if (!input) {
     return 0;
   }
 
-  if (*satString == ')') {
+  if (*input == ')') {
     satAddClause(sat, a, a, b);
-    return satString;
-  } else if (*satString == 'v') {
-    satString = nextToken(satString+1);
+    return input;
+  } else if (*input == 'v') {
+    input = nextToken(input+1);
   } else {
-    printf("Unexpected %c\n", *satString);
+    printf("Unexpected %c\n", *input);
     return 0;
   }
   
   //Parse the last variable in clause
-  satString = parseVariable(sat, &c, satString);
-  if (!satString) {
+  input = parseVariable(sat, &c, input);
+  if (!input) {
     return 0;
   }
 
   satAddClause(sat, a, b, c);
   
-  return satString;
+  return input;
 }
 
 /**
  * Clause: '(' ClauseBody ')' ['^' Clause]
  */
-char const* parseCnfClause(SAT* sat, char const* satString) {
+char const* parseCnfClause(SAT* sat, char const* input) {
 
   //If the next token is a ( then it is the start of a 3-sat clause
-  if (*satString == '(') {
+  if (*input == '(') {
 
     //Parse the variables
-    satString = parseClauseBody(sat, nextToken(satString+1));
-    if (!satString) {
+    input = parseClauseBody(sat, nextToken(input+1));
+    if (!input) {
       return 0;
     }
     //Check that it is closed
-    if (*satString == ')') {
-      satString = nextToken(satString+1);
+    if (*input == ')') {
+      input = nextToken(input+1);
     } else {
       printf("ERROR: Expecting )\n");
       return 0;
     }
-  } else if (parseVariableExpected(satString)) { //If the next token is a ¬ 
+  } else if (parseVariableExpected(input)) { //If the next token is a ¬ 
     ClausePartial a;
-    satString = parseVariable(sat, &a, satString);
+    input = parseVariable(sat, &a, input);
     satAddClause(sat, a, a, a);
-    if (!satString) {
+    if (!input) {
       return 0;
     }
   } else {
@@ -149,18 +149,18 @@ char const* parseCnfClause(SAT* sat, char const* satString) {
   }
 
   //If the next terminal is a ^ then repeat for the next cnf clause  
-  if (*satString == '^') {
-    return parseCnfClause(sat, nextToken(satString+1));
-  } else if (!*satString) {
-    //If its the end of the parsing then return satString (Anything other than 0 is ok - 0 indicates error)
-    return satString;
+  if (*input == '^') {
+    return parseCnfClause(sat, nextToken(input+1));
+  } else if (!*input) {
+    //If its the end of the parsing then return input (Anything other than 0 is ok - 0 indicates error)
+    return input;
   } else {
     //Any other characters cause an error
-    printf("ERROR: Unexpected %c\n", *satString);
+    printf("ERROR: Unexpected %c\n", *input);
     return 0;
   }
 }
 
-bool parseSat(SAT* sat, char const* satString) {
-  return parseCnfClause(sat, satString) != 0;
+bool parseSat(SAT* sat, char const* input) {
+  return parseCnfClause(sat, input) != 0;
 }

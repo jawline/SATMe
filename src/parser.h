@@ -6,6 +6,6 @@
 /**
  * Parses a string into a SAT data structure
  */
-bool parseSat(SAT* sat, char const* satString);
+bool parseSat(SAT* sat, char const* input);
 
 #endif //_SAT_PARSER_DEF_H_

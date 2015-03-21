@@ -65,7 +65,7 @@ void satAddClause(SAT* sat, ClausePartial a, ClausePartial b, ClausePartial c) {
 
 Variable* satFindVariable(SAT* sat, char const* name) {
   for (unsigned int i = 0; i < sat->numVariables; i++) {
-    if (strcmp((sat->variables[i])->name, name) == 0) {
+    if (strcmp(sat->variables[i]->name, name) == 0) {
       return sat->variables[i];
     }
   }
@@ -75,13 +75,13 @@ Variable* satFindVariable(SAT* sat, char const* name) {
 void printSat(SAT* sat) {
 	printf("Variables: ");
 	for (unsigned int i = 0; i < sat->numVariables; i++) {
-		printf("%s%s", (sat->variables[i])->name, i == (sat->numVariables - 1) ? "" : " ");	
+		printf("%s%s", sat->variables[i]->name, i == (sat->numVariables - 1) ? "" : " ");	
 	}
 	printf("\n");
 
 	printf("Clauses: ");
 	for (unsigned int i = 0; i < sat->numClauses; i++) {
-		printClause(sat->clauses+i);
+		printClause(&sat->clauses[i]);
 		printf(i == (sat->numClauses-1) ? "" : "^");
 	}
 	printf("\n");
@@ -89,16 +89,16 @@ void printSat(SAT* sat) {
 
 void warnUnusedVariables(SAT* sat) {
 	for (unsigned int i = 0; i < sat->numVariables; i++) {
-		(sat->variables[i])->state = VAR_FALSE;
+		sat->variables[i]->state = VAR_FALSE;
 	}
 	for (unsigned int i = 0; i < sat->numClauses; i++) {
-		(sat->clauses+i)->A.variable->state = VAR_TRUE;
-		(sat->clauses+i)->B.variable->state = VAR_TRUE;
-		(sat->clauses+i)->C.variable->state = VAR_TRUE;
+		sat->clauses[i].A.variable->state = VAR_TRUE;
+		sat->clauses[i].B.variable->state = VAR_TRUE;
+		sat->clauses[i].C.variable->state = VAR_TRUE;
 	}
 	for (unsigned int i = 0; i < sat->numVariables; i++) {
-		if (!(sat->variables[i])->state) {
-			printf("Warning: Variable %s is unused (This could slow down execution)\n", (sat->variables[i])->name);
+		if (!sat->variables[i]->state) {
+			printf("Warning: Variable %s is unused (This could slow down execution)\n", sat->variables[i]->name);
 		}
 	}
 }
@@ -107,13 +107,13 @@ void warnUnusedVariables(SAT* sat) {
 void printSatAllocation(SAT* sat) {
 	printf("Variables: ");
 	for (unsigned int i = 0; i < sat->numVariables; i++) {
-		printf("%s: %s\n", (sat->variables[i])->name, ((sat->variables[i])->state == VAR_TRUE) ? "true" : "false");	
+		printf("%s: %s\n", sat->variables[i]->name, sat->variables[i]->state == VAR_TRUE ? "true" : "false");	
 	}
 }
 
 bool satSatisfied(SAT* sat) {
 	for (unsigned int i = 0; i < sat->numClauses; i++) {
-		if (!clauseSatisfied(sat->clauses+i)) {
+		if (!clauseSatisfied(&sat->clauses[i])) {
 			return false;
 		}
 	}
@@ -125,7 +125,7 @@ bool satRecursiveSatisfy(SAT* sat) {
 	//Find the next unset state
 	Variable* unset = 0;
 	for (unsigned int i = 0; i < sat->numVariables; i++) {
-		if ((sat->variables[i])->state == VAR_UNSET) {
+		if (sat->variables[i]->state == VAR_UNSET) {
 			unset = sat->variables[i];
 			break;
 		}
@@ -138,12 +138,14 @@ bool satRecursiveSatisfy(SAT* sat) {
 
 	//Recurse and test satisfiability with this variable set to true
 	unset->state = VAR_TRUE;
+
 	if (satRecursiveSatisfy(sat)) {
 		return true;
 	}
 
 	//Recurse and test satisfiability with this variable set to false
 	unset->state = VAR_FALSE;
+	
 	if (satRecursiveSatisfy(sat)) {
 		return true;
 	}
@@ -158,7 +160,7 @@ bool satIsSatisfiable(SAT* sat) {
 	
 	//Reset all states to VAR_UNSET before attempting to satisfy recursively
 	for (unsigned int i = 0; i < sat->numVariables; i++) {
-		(sat->variables[i])->state = VAR_UNSET;
+		sat->variables[i]->state = VAR_UNSET;
 	}
 
 	return satRecursiveSatisfy(sat);
