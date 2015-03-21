@@ -162,5 +162,6 @@ char const* parseCnfClause(SAT* sat, char const* input) {
 }
 
 bool parseSat(SAT* sat, char const* input) {
+  initialiseSat(sat, 0, 0, 0, 0);
   return parseCnfClause(sat, input) != 0;
 }

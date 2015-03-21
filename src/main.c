@@ -22,7 +22,6 @@ int main(int argc, char** argv) {
 	
 	SAT s;
 
-	initialiseSat(&s, 0, 0, 0, 0);
 	if (!parseSat(&s, argv[1])) {
 		printf("Unable to parse %s\n", argv[1]);
 		return 0;

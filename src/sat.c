@@ -28,13 +28,8 @@ void freeSat(SAT* sat) {
 
 Variable* satAddVariable(SAT* sat, char const* name) {
   unsigned int numCurrent = sat->numVariables;
-
   Variable** newAllocation = malloc(sizeof(Variable*) * (numCurrent + 1));
-
-  if (numCurrent) {
-  	memcpy(newAllocation, sat->variables, sizeof(Variable*) * sat->numVariables);
-  }
-
+  memcpy(newAllocation, sat->variables, sizeof(Variable*) * sat->numVariables);
   newAllocation[numCurrent] = malloc(sizeof(Variable));
   initialiseVariable(newAllocation[numCurrent], name);
 
@@ -51,14 +46,13 @@ Variable* satAddVariable(SAT* sat, char const* name) {
 void satAddClause(SAT* sat, ClausePartial a, ClausePartial b, ClausePartial c) {
 	unsigned int numCurrent = sat->numClauses;
 	Clause* newAllocation = malloc(sizeof(Clause) * (numCurrent+1));
-
-	if (numCurrent) {
-		memcpy(newAllocation, sat->clauses, sizeof(Clause) * numCurrent);
+	memcpy(newAllocation, sat->clauses, sizeof(Clause) * numCurrent);
+	initialiseClause(newAllocation+numCurrent, a, b, c);
+	
+	if (sat->clauses) {
+		free(sat->clauses);
 	}
 
-	initialiseClause(newAllocation+numCurrent, a, b, c);
-
-	free(sat->clauses);
 	sat->clauses = newAllocation;
 	sat->numClauses++;
 }
@@ -124,6 +118,7 @@ bool satRecursiveSatisfy(SAT* sat) {
 
 	//Find the next unset state
 	Variable* unset = 0;
+
 	for (unsigned int i = 0; i < sat->numVariables; i++) {
 		if (sat->variables[i]->state == VAR_UNSET) {
 			unset = sat->variables[i];
