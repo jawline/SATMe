@@ -8,7 +8,7 @@
  * The SAT data structure represents a boolean satisfaction problem as a C data structure
  */
 typedef struct {
-	Variable* variables;
+	Variable** variables;
 	unsigned int numVariables;
 
 	Clause* clauses;
@@ -18,7 +18,7 @@ typedef struct {
 /**
  * Initialise a SAT instance with the given values
  */
-void initialiseSat(SAT* sat, Variable* variables, unsigned int numVariables, Clause* clauses, unsigned int numClauses);
+void initialiseSat(SAT* sat, Variable** variables, unsigned int numVariables, Clause* clauses, unsigned int numClauses);
 
 /**
  * Frees all memory attached to a SAT instance

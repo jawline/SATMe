@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void initialiseSat(SAT* sat, Variable* variables, unsigned int numVariables, Clause* clauses, unsigned int numClauses) {
+void initialiseSat(SAT* sat, Variable** variables, unsigned int numVariables, Clause* clauses, unsigned int numClauses) {
 	sat->variables = variables;
 	sat->numVariables = numVariables;
 	sat->clauses = clauses;
@@ -13,7 +13,7 @@ void initialiseSat(SAT* sat, Variable* variables, unsigned int numVariables, Cla
 void freeSat(SAT* sat) {
 	if (sat->variables) {
 		for (unsigned int i = 0; i < sat->numVariables; i++) {
-			freeVariable(sat->variables+i);
+			freeVariable(sat->variables[i]);
 		}
 		free(sat->variables);
 		sat->variables = 0;
@@ -26,50 +26,26 @@ void freeSat(SAT* sat) {
 	}
 }
 
-void resolveClauseChange(Clause* clause, Variable* old, Variable* newVariable) {
-	printf("Joined\n");
-	
-	printf("Aaah\n");
-	printf("Aaah\n");
-	printf("Laucnhing for %s\n", clause->A.variable->name);
-
-	printf("Aaah\n");
-	Variable* iter = old;
-	while (iter != clause->A.variable) {
-		printf("Looking: %s\n", iter->name);
-		iter++;
-	}
-	printf("Boo\n");
-	clause->A.variable = newVariable + (iter-old);
-	printf("Resolved %s\n", clause->A.variable->name);
-	for (;;) {}
-}
-
 Variable* satAddVariable(SAT* sat, char const* name) {
   unsigned int numCurrent = sat->numVariables;
 
-  Variable* newAllocation = malloc(sizeof(Variable) * (numCurrent + 1));
+  Variable** newAllocation = malloc(sizeof(Variable*) * (numCurrent + 1));
 
   if (numCurrent) {
-  	memcpy(newAllocation, sat->variables, sizeof(Variable) * sat->numVariables);
+  	memcpy(newAllocation, sat->variables, sizeof(Variable*) * sat->numVariables);
   }
 
-  initialiseVariable(newAllocation + numCurrent, name);
-  Variable* createdVariable = newAllocation + numCurrent;
+  newAllocation[numCurrent] = malloc(sizeof(Variable));
+  initialiseVariable(newAllocation[numCurrent], name);
 
-  printf("Added\n");
-
-  //Point old clause references to new
-  for (unsigned int i = 0; i < sat->numClauses; i++) {
-  	printf("You what mate\n");
-  	resolveClauseChange(sat->clauses + i, sat->variables, newAllocation);
+  if (sat->variables) {
+  	free(sat->variables);
   }
 
-  free(sat->variables);
   sat->variables = newAllocation;
   sat->numVariables++;
   
-  return createdVariable;
+  return newAllocation[numCurrent];
 }
 
 void satAddClause(SAT* sat, ClausePartial a, ClausePartial b, ClausePartial c) {
@@ -89,8 +65,8 @@ void satAddClause(SAT* sat, ClausePartial a, ClausePartial b, ClausePartial c) {
 
 Variable* satFindVariable(SAT* sat, char const* name) {
   for (unsigned int i = 0; i < sat->numVariables; i++) {
-    if (strcmp((sat->variables+i)->name, name) == 0) {
-      return sat->variables+i;
+    if (strcmp((sat->variables[i])->name, name) == 0) {
+      return sat->variables[i];
     }
   }
   return 0;
@@ -99,7 +75,7 @@ Variable* satFindVariable(SAT* sat, char const* name) {
 void printSat(SAT* sat) {
 	printf("Variables: ");
 	for (unsigned int i = 0; i < sat->numVariables; i++) {
-		printf("%s%s", (sat->variables+i)->name, i == (sat->numVariables - 1) ? "" : " ");	
+		printf("%s%s", (sat->variables[i])->name, i == (sat->numVariables - 1) ? "" : " ");	
 	}
 	printf("\n");
 
@@ -113,7 +89,7 @@ void printSat(SAT* sat) {
 
 void warnUnusedVariables(SAT* sat) {
 	for (unsigned int i = 0; i < sat->numVariables; i++) {
-		(sat->variables+i)->state = VAR_FALSE;
+		(sat->variables[i])->state = VAR_FALSE;
 	}
 	for (unsigned int i = 0; i < sat->numClauses; i++) {
 		(sat->clauses+i)->A.variable->state = VAR_TRUE;
@@ -121,8 +97,8 @@ void warnUnusedVariables(SAT* sat) {
 		(sat->clauses+i)->C.variable->state = VAR_TRUE;
 	}
 	for (unsigned int i = 0; i < sat->numVariables; i++) {
-		if (!(sat->variables+i)->state) {
-			printf("Warning: Variable %s is unused (This could slow down execution)\n", (sat->variables+i)->name);
+		if (!(sat->variables[i])->state) {
+			printf("Warning: Variable %s is unused (This could slow down execution)\n", (sat->variables[i])->name);
 		}
 	}
 }
@@ -131,7 +107,7 @@ void warnUnusedVariables(SAT* sat) {
 void printSatAllocation(SAT* sat) {
 	printf("Variables: ");
 	for (unsigned int i = 0; i < sat->numVariables; i++) {
-		printf("%s: %s\n", (sat->variables+i)->name, ((sat->variables+i)->state == VAR_TRUE) ? "true" : "false");	
+		printf("%s: %s\n", (sat->variables[i])->name, ((sat->variables[i])->state == VAR_TRUE) ? "true" : "false");	
 	}
 }
 
@@ -149,8 +125,8 @@ bool satRecursiveSatisfy(SAT* sat) {
 	//Find the next unset state
 	Variable* unset = 0;
 	for (unsigned int i = 0; i < sat->numVariables; i++) {
-		if ((sat->variables+i)->state == VAR_UNSET) {
-			unset = sat->variables+i;
+		if ((sat->variables[i])->state == VAR_UNSET) {
+			unset = sat->variables[i];
 			break;
 		}
 	}
@@ -182,7 +158,7 @@ bool satIsSatisfiable(SAT* sat) {
 	
 	//Reset all states to VAR_UNSET before attempting to satisfy recursively
 	for (unsigned int i = 0; i < sat->numVariables; i++) {
-		(sat->variables+i)->state = VAR_UNSET;
+		(sat->variables[i])->state = VAR_UNSET;
 	}
 
 	return satRecursiveSatisfy(sat);

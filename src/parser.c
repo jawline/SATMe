@@ -120,7 +120,6 @@ char const* parseCnfClause(SAT* sat, char const* satString) {
       printf("ERROR: Expecting )\n");
       return 0;
     }
-    printf("Finished parsing clause\n");
   } else {
     printf("ERROR: Expecting (\n");
     return 0;

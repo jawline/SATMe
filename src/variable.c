@@ -15,4 +15,5 @@ void initialiseVariable(Variable* variable, char const* name) {
 
 void freeVariable(Variable* variable) {
 	free(variable->name);
+	free(variable);
 }
