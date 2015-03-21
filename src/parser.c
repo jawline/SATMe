@@ -56,6 +56,16 @@ char const* parseVariable(SAT* sat, ClausePartial* partial, char const* satStrin
   return satString;
 }
 
+bool parseVariableExpected(char const* satString) {
+  if (isalpha(*satString)) {
+    return true;
+  }
+  if (*satString && *satString == -62 && *(satString+1) == -84) {
+    return true;
+  }
+  return false;
+}
+
 /**
  * ClauseBody: Variable 'v' Variable 'v' Variable
  */
@@ -111,7 +121,7 @@ char const* parseClauseBody(SAT* sat, char const* satString) {
  */
 char const* parseCnfClause(SAT* sat, char const* satString) {
 
-  //Parse a clause
+  //If the next token is a ( then it is the start of a 3-sat clause
   if (*satString == '(') {
 
     //Parse the variables
@@ -126,8 +136,15 @@ char const* parseCnfClause(SAT* sat, char const* satString) {
       printf("ERROR: Expecting )\n");
       return 0;
     }
+  } else if (parseVariableExpected(satString)) { //If the next token is a ¬ 
+    ClausePartial a;
+    satString = parseVariable(sat, &a, satString);
+    satAddClause(sat, a, a, a);
+    if (!satString) {
+      return 0;
+    }
   } else {
-    printf("ERROR: Expecting (\n");
+    printf("ERROR: Expected a single variable condition (A or ¬A) or a 3-sat clause (AvBvC)");
     return 0;
   }
 
