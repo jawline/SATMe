@@ -1,4 +1,4 @@
-SAT Solving experiment
+#SAT Solving experiment
 
 Dependancies: gcc, make
 
